@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#2FA8BF"/><stop offset="0.55" stop-color="#1E7D9E"/><stop offset="1" stop-color="#0E5470"/>
+    </linearGradient>
+    <linearGradient id="dropFill" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4F4F8"/>
+    </linearGradient>
+    <clipPath id="drop"><path d="M512 160 C512 160 266 448 266 612 A246 246 0 0 0 758 612 C758 448 512 160 512 160 Z"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <path d="M512 160 C512 160 266 448 266 612 A246 246 0 0 0 758 612 C758 448 512 160 512 160 Z" fill="url(#dropFill)"/>
+  <g clip-path="url(#drop)" fill="none" stroke-width="32" stroke-linecap="round">
+    <g stroke="#1E7D9E"><path d="M240 604 C 320 544, 404 544, 488 604 S 656 664, 790 594"/></g>
+    <g stroke="#1E7D9E" opacity="0.7">    <path d="M240 694 C 320 634, 404 634, 488 694 S 656 754, 790 684"/></g>
+    <g stroke="#1E7D9E" opacity="0.45">    <path d="M240 784 C 320 724, 404 724, 488 784 S 656 844, 790 774"/></g>
+  </g>
+</svg>

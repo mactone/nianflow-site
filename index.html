@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-Hant" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>念流 NianFlow — 隨口記下閃念，AI 匯流成文章</title>
+<meta name="description" content="隨手用錄音或拍照捕捉閃念，AI 把零散的念頭匯成主題，用聽的方式回顧、邊聽邊補充，最後整理成文章。錄音只在手機上轉文字。">
+<meta property="og:title" content="念流 NianFlow — 隨口記下閃念，AI 匯流成文章">
+<meta property="og:description" content="Apple Watch、鎖定畫面、Siri 一按就錄；AI 匯流成主題、唸給你聽、寫成文章。">
+<meta property="og:image" content="https://mactone.github.io/nianflow-site/assets/04-flow-detail.jpg">
+<meta name="theme-color" content="#071216">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#071216; --bg2:#0b1b21; --card:#0f2229; --line:rgba(255,255,255,.09);
+  --text:#eef6f8; --muted:#97aeb5; --dim:#6c858c;
+  --teal:#2FA8BF; --teal2:#1E7D9E; --deep:#0E5470; --red:#F2545B; --amber:#F5B451;
+  --radius:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:Inter,"Noto Sans TC","PingFang TC",system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%;height:auto}
+
+/* 語言切換：<span class="zh"> 與 <span class="en"> 成對出現 */
+html[data-lang="zh"] .en, html[data-lang="en"] .zh{display:none!important}
+
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+section{padding:110px 0}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;color:var(--amber);background:rgba(245,180,81,.1);border:1px solid rgba(245,180,81,.28);padding:6px 12px;border-radius:999px}
+h1{font-size:clamp(40px,6.4vw,76px);line-height:1.08;font-weight:800;letter-spacing:-.02em;margin:22px 0}
+h2{font-size:clamp(30px,4.2vw,48px);line-height:1.15;font-weight:800;letter-spacing:-.015em}
+h3{font-size:19px;font-weight:700;margin-bottom:8px}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:560px}
+.sub{color:var(--muted);font-size:18px;max-width:640px;margin-top:16px}
+.center{text-align:center}.center .sub{margin-left:auto;margin-right:auto}
+.grad{background:linear-gradient(100deg,#7fd8e8,var(--teal) 45%,#5fb6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:16px;padding:14px 22px;border-radius:999px;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:#fff;color:#071216}
+.btn-ghost{border:1px solid var(--line);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.05)}
+.btn svg{width:18px;height:18px}
+.note{font-size:13px;color:var(--dim);margin-top:14px}
+
+/* 導覽列 */
+nav{position:sticky;top:0;z-index:20;background:rgba(7,18,22,.72);backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.brand img{width:30px;height:30px;border-radius:8px}
+.nav-links{display:flex;align-items:center;gap:26px;font-size:14px;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.lang{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--text);background:none;cursor:pointer;font-family:inherit}
+.nav-cta{background:#fff;color:#071216;padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px}
+@media(max-width:760px){.nav-links .hide-sm{display:none}.nav-links{gap:14px}}
+
+/* 首屏 */
+.hero{position:relative;padding:72px 0 40px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:900px;height:900px;background:radial-gradient(closest-side,rgba(47,168,191,.22),transparent 70%);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.phones{position:relative;height:620px}
+.phone{position:absolute;width:280px;border-radius:44px;padding:9px;background:linear-gradient(160deg,#2a3c42,#0d1a1e);box-shadow:0 40px 80px -20px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08) inset}
+.phone img{border-radius:36px;width:100%}
+.phones .p1{left:4%;top:20px;transform:rotate(-4deg)}
+.phones .p2{right:2%;top:110px;transform:rotate(3deg);z-index:2}
+@media(max-width:900px){
+  .hero .wrap{grid-template-columns:1fr}
+  .phones{height:500px;max-width:520px;margin:0 auto;width:100%}
+  .phone{width:230px}
+}
+@media(max-width:480px){.phones{height:420px}.phone{width:190px;border-radius:34px;padding:7px}.phone img{border-radius:28px}}
+
+/* 四步流程 */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px 0;overflow:hidden;display:flex;flex-direction:column}
+.step .num{font-size:13px;font-weight:700;color:var(--teal);letter-spacing:.08em}
+.step p{color:var(--muted);font-size:15px;margin-bottom:20px}
+.step .shot{margin-top:auto;border-radius:22px 22px 0 0;overflow:hidden;border:1px solid var(--line);border-bottom:0;max-height:300px}
+@media(max-width:960px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* 功能卡片 */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.card p{color:var(--muted);font-size:15px}
+.ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:18px;background:rgba(47,168,191,.14);color:var(--teal)}
+.ico.red{background:rgba(242,84,91,.14);color:var(--red)}
+.ico.amber{background:rgba(245,180,81,.14);color:var(--amber)}
+.ico svg{width:22px;height:22px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+/* 左右分欄 */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.split.rev .media{order:-1}
+.split .media{display:flex;justify-content:center;gap:20px}
+.split .media .phone{position:relative;width:270px}
+.split .media .phone.small{width:230px;margin-top:60px}
+.checks{list-style:none;margin-top:28px;display:grid;gap:14px}
+.checks li{display:flex;gap:12px;color:var(--muted)}
+.checks li b{color:var(--text);font-weight:600}
+.checks svg{flex:none;width:20px;height:20px;color:var(--teal);margin-top:3px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--muted)}
+.chip b{color:var(--text);font-weight:600}
+@media(max-width:900px){
+  .split{grid-template-columns:1fr;gap:40px}
+  .split.rev .media{order:0}
+  .split .media .phone{width:220px}.split .media .phone.small{width:180px}
+}
+@media(max-width:480px){.split .media .phone{width:170px;border-radius:32px;padding:7px}.split .media .phone img{border-radius:26px}.split .media .phone.small{width:140px}}
+
+.band{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+/* 手錶 */
+.watch{width:190px;border-radius:52px;padding:14px;background:linear-gradient(160deg,#2a3c42,#0d1a1e);box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.watch img{border-radius:40px}
+
+/* 加入內測 */
+.install{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px;text-align:left}
+.install .card .n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--teal2);font-weight:700;font-size:14px;margin-bottom:14px}
+.install .card a{color:var(--teal);font-weight:600}
+@media(max-width:900px){.install{grid-template-columns:1fr}}
+.final{margin-top:44px;display:flex;flex-direction:column;align-items:center}
+
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--dim);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+footer .links{display:flex;gap:22px;flex-wrap:wrap}
+footer a:hover{color:var(--text)}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24" fill="currentColor"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.17-1.53 2.66-.39 6.59 1.1 8.75.73 1.05 1.6 2.23 2.73 2.19 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.4 1.2-2.46-.03-.01-2.3-.88-2.32-3.5ZM14.2 6.12c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.69-.92 2.68.97.08 1.96-.49 2.56-1.23Z"/></symbol>
+</svg>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.svg" alt=""><span>念流 NianFlow</span></a>
+    <div class="nav-links">
+      <a class="hide-sm" href="#how"><span class="zh">怎麼用</span><span class="en">How it works</span></a>
+      <a class="hide-sm" href="#privacy"><span class="zh">隱私</span><span class="en">Privacy</span></a>
+      <a class="hide-sm" href="support/"><span class="zh">支援</span><span class="en">Support</span></a>
+      <button class="lang" id="lang" type="button" aria-label="Switch language">EN</button>
+      <a class="nav-cta" href="#join"><span class="zh">加入內測</span><span class="en">Join beta</span></a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- 首屏 -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow"><span class="zh">iOS 內測招募中・限額 20 位</span><span class="en">iOS beta open · 20 spots</span></span>
+      <h1>
+        <span class="zh">念頭一來，<br><span class="grad">隨手接住。</span></span>
+        <span class="en">Catch every<br><span class="grad">passing thought.</span></span>
+      </h1>
+      <p class="lead">
+        <span class="zh">跑步、通勤、洗澡時冒出的好點子，抬手對 Apple Watch 說、鎖定畫面一按就錄。念流把零散的念頭匯成主題、唸給你聽，再幫你寫成一篇文章。</span>
+        <span class="en">Ideas show up while you run, commute or shower. Speak to your Apple Watch or tap the Lock Screen to record. NianFlow gathers scattered thoughts into themes, reads them back to you, and turns them into an article.</span>
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary tf-link" href="#join"><svg><use href="#i-apple"/></svg><span class="zh">加入 TestFlight 內測</span><span class="en">Join the TestFlight beta</span></a>
+        <a class="btn btn-ghost" href="#how"><span class="zh">看看怎麼用</span><span class="en">See how it works</span></a>
+      </div>
+      <p class="note"><span class="zh">免費・需要 iPhone（iOS 26）・AI 功能自備 OpenAI 或 DeepSeek API Key</span><span class="en">Free · iPhone with iOS 26 · Bring your own OpenAI or DeepSeek API key for AI features</span></p>
+    </div>
+    <div class="phones">
+      <div class="phone p1"><img src="assets/01-capture.jpg" alt="念頭匣與錄音按鈕" width="1100" height="2391"></div>
+      <div class="phone p2"><img src="assets/04-flow-detail.jpg" alt="念流詳細頁" width="1100" height="2391"></div>
+    </div>
+  </div>
+</header>
+
+<!-- 四步流程 -->
+<section id="how">
+  <div class="wrap">
+    <div class="center reveal">
+      <h2><span class="zh">從閃念到文章，四步。</span><span class="en">From a passing thought to an article, in four steps.</span></h2>
+      <p class="sub"><span class="zh">你只要負責說出來，整理、回顧、成文交給念流。</span><span class="en">You just say it. NianFlow does the sorting, the reviewing and the writing.</span></p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="num">01 · <span class="zh">捕捉</span><span class="en">CAPTURE</span></div>
+        <h3><span class="zh">隨口說、隨手拍</span><span class="en">Say it, snap it</span></h3>
+        <p><span class="zh">錄音、拍照或打字。語音在手機上轉成文字，AI 順手修錯字、補標點。</span><span class="en">Record, photograph or type. Speech is transcribed on the phone, then AI fixes typos and punctuation.</span></p>
+        <div class="shot"><img src="assets/01-capture.jpg" alt="" loading="lazy"></div>
+      </div>
+      <div class="step reveal">
+        <div class="num">02 · <span class="zh">匯流</span><span class="en">MERGE</span></div>
+        <h3><span class="zh">AI 匯成主題</span><span class="en">AI groups by theme</span></h3>
+        <p><span class="zh">一段時間的念頭依主題歸成「念流」，忠於原意、不亂加內容。</span><span class="en">Thoughts are grouped into “flows” by theme, faithful to what you meant, nothing made up.</span></p>
+        <div class="shot"><img src="assets/02-merge.jpg" alt="" loading="lazy"></div>
+      </div>
+      <div class="step reveal">
+        <div class="num">03 · <span class="zh">回聽</span><span class="en">LISTEN</span></div>
+        <h3><span class="zh">邊聽邊補充</span><span class="en">Listen and add</span></h3>
+        <p><span class="zh">念流用口語唸給你聽。想到什麼，點耳機「下一首」直接插話。</span><span class="en">Each flow is read aloud. Thought of something? Press “next” on your earbuds and just talk.</span></p>
+        <div class="shot"><img src="assets/05-player.jpg" alt="" loading="lazy"></div>
+      </div>
+      <div class="step reveal">
+        <div class="num">04 · <span class="zh">成文</span><span class="en">WRITE</span></div>
+        <h3><span class="zh">一鍵寫成文章</span><span class="en">One tap to an article</span></h3>
+        <p><span class="zh">部落格、筆記、社群貼文或自訂風格，輸出 Markdown 直接分享。</span><span class="en">Blog post, note, social post or your own style, exported as Markdown.</span></p>
+        <div class="shot"><img src="assets/08-article.jpg" alt="" loading="lazy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 快速捕捉 -->
+<section class="band">
+  <div class="wrap split">
+    <div class="reveal">
+      <h2><span class="zh">不用打開 App，<br>也能記下來。</span><span class="en">Capture without<br>opening the app.</span></h2>
+      <p class="sub"><span class="zh">好點子不等人。念流把錄音按鈕放在你手邊每個地方。</span><span class="en">Good ideas don't wait. NianFlow puts the record button everywhere you are.</span></p>
+      <ul class="checks">
+        <li><svg><use href="#i-check"/></svg><span><b><span class="zh">Apple Watch</span><span class="en">Apple Watch</span></b> — <span class="zh">抬手就錄，錄完自動傳到 iPhone 轉成文字。</span><span class="en">raise your wrist and talk; it syncs to your iPhone and gets transcribed.</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><b><span class="zh">鎖定畫面小工具</span><span class="en">Lock Screen widget</span></b> — <span class="zh">不用解鎖，一按就開始錄。</span><span class="en">one tap to record, no unlocking.</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><b><span class="zh">Siri 與動作按鈕</span><span class="en">Siri &amp; Action button</span></b> — <span class="zh">說「用念流記下念頭」（動作按鈕限 iPhone 15 Pro 以後機型）。</span><span class="en">just ask Siri (Action button on iPhone 15 Pro and later).</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><b><span class="zh">停頓自動結束</span><span class="en">Auto stop</span></b> — <span class="zh">說完停幾秒就自動收工，不用再按一次。</span><span class="en">pause for a few seconds and recording ends on its own.</span></span></li>
+      </ul>
+    </div>
+    <div class="media reveal">
+      <div class="watch"><img src="assets/watch-recording.png" alt="Apple Watch 錄音畫面" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 用聽的回顧 -->
+<section>
+  <div class="wrap split rev">
+    <div class="reveal">
+      <h2><span class="zh">用聽的，<br>回顧你的想法。</span><span class="en">Review your ideas<br>by listening.</span></h2>
+      <p class="sub"><span class="zh">念流把每條主題寫成適合朗讀的口語短句。通勤、散步時戴上耳機，像聽 Podcast 一樣聽自己的念頭。</span><span class="en">Every flow is written in short spoken sentences. Put on your earbuds on a walk and listen to your own thoughts like a podcast.</span></p>
+      <ul class="checks">
+        <li><svg><use href="#i-check"/></svg><span><span class="zh">聽到一半有新想法？點耳機「下一首」直接插入念頭，錄完從句首續播。</span><span class="en">New idea halfway through? Press “next” on your earbuds to insert a thought; playback resumes from the sentence.</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><span class="zh">待聽清單連續播放，記得哪些已經聽過。</span><span class="en">A listening queue plays flows back to back and remembers what you've heard.</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><span class="zh">鎖定畫面與 AirPods 都能控制播放。</span><span class="en">Control playback from the Lock Screen and AirPods.</span></span></li>
+      </ul>
+    </div>
+    <div class="media reveal">
+      <div class="phone"><img src="assets/05-player.jpg" alt="播報器畫面" loading="lazy"></div>
+      <div class="phone small"><img src="assets/04-flow-detail.jpg" alt="" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 成文 -->
+<section class="band">
+  <div class="wrap split">
+    <div class="reveal">
+      <h2><span class="zh">一週的碎念，<br>變成一篇文章。</span><span class="en">A week of fragments,<br>one finished article.</span></h2>
+      <p class="sub"><span class="zh">選一種風格，AI 用第一人稱「我」把念流寫成 Markdown 文章，可以預覽、編輯、分享或複製。</span><span class="en">Pick a style and AI writes the flow up in your own first-person voice as Markdown you can preview, edit, share or copy.</span></p>
+      <div class="chips">
+        <span class="chip"><b><span class="zh">部落格</span><span class="en">Blog</span></b> 1000–1500 <span class="zh">字</span><span class="en">chars</span></span>
+        <span class="chip"><b><span class="zh">筆記</span><span class="en">Note</span></b> 300–600 <span class="zh">字</span><span class="en">chars</span></span>
+        <span class="chip"><b><span class="zh">社群貼文</span><span class="en">Social post</span></b> 150–300 <span class="zh">字</span><span class="en">chars</span></span>
+        <span class="chip"><b><span class="zh">自訂</span><span class="en">Custom</span></b></span>
+      </div>
+      <ul class="checks">
+        <li><svg><use href="#i-check"/></svg><span><span class="zh">設定你的個人寫作風格，文章更像你寫的。</span><span class="en">Describe your personal writing style so articles sound like you.</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><span class="zh">沒有 API Key 也行：把念流帶到你慣用的 AI 助理討論，再貼回念流存成文章。</span><span class="en">No API key? Take the flow to your favorite AI assistant, then paste the result back as an article.</span></span></li>
+        <li><svg><use href="#i-check"/></svg><span><span class="zh">念流也能做成分享卡片，貼到社群。</span><span class="en">Turn a flow into a share card for social media.</span></span></li>
+      </ul>
+    </div>
+    <div class="media reveal">
+      <div class="phone"><img src="assets/08-article.jpg" alt="文章預覽畫面" loading="lazy"></div>
+      <div class="phone small"><img src="assets/10-share-card.jpg" alt="" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 隱私 -->
+<section id="privacy">
+  <div class="wrap">
+    <div class="center reveal">
+      <h2><span class="zh">你的念頭，留在你身邊。</span><span class="en">Your thoughts stay with you.</span></h2>
+      <p class="sub"><span class="zh">沒有念流帳號、沒有廣告、沒有分析追蹤。</span><span class="en">No NianFlow account, no ads, no analytics.</span></p>
+    </div>
+    <div class="grid">
+      <div class="card reveal">
+        <div class="ico red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg></div>
+        <h3><span class="zh">錄音不上傳</span><span class="en">Recordings never leave</span></h3>
+        <p><span class="zh">語音只在手機上用 Apple 的語音辨識轉成文字，錄音檔不會送到任何伺服器。</span><span class="en">Speech is transcribed on the phone with Apple's speech recognition. Audio files are never sent to any server.</span></p>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.78A6 6 0 0 0 4.5 12.5 3.5 3.5 0 0 0 6 19h11.5Z"/></svg></div>
+        <h3><span class="zh">存在你的 iCloud</span><span class="en">Stored in your iCloud</span></h3>
+        <p><span class="zh">念頭、念流與文章存在手機，透過你自己的 iCloud 在裝置間同步。</span><span class="en">Thoughts, flows and articles live on your phone and sync through your own iCloud.</span></p>
+      </div>
+      <div class="card reveal">
+        <div class="ico amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.8-9.8M17 6l3 3M14 9l2 2"/></svg></div>
+        <h3><span class="zh">你的 Key，你決定</span><span class="en">Your key, your call</span></h3>
+        <p><span class="zh">AI 功能用你自己的 OpenAI 或 DeepSeek Key，同意後才會把念頭文字（和照片）送出。用量在設定裡看得到。</span><span class="en">AI uses your own OpenAI or DeepSeek key. Thought text (and photos) are sent only after you agree. Usage is shown in Settings.</span></p>
+      </div>
+    </div>
+    <p class="center note" style="margin-top:28px"><a href="privacy/" style="color:var(--teal)"><span class="zh">閱讀隱私權政策 →</span><span class="en">Read the privacy policy →</span></a></p>
+  </div>
+</section>
+
+<!-- 加入內測 -->
+<section id="join" class="band">
+  <div class="wrap center">
+    <div class="reveal">
+      <h2><span class="zh">加入內測。</span><span class="en">Join the beta.</span></h2>
+      <p class="sub"><span class="zh">念流目前在 TestFlight 內測，限額 20 位。三步就能開始。</span><span class="en">NianFlow is in a TestFlight beta limited to 20 testers. Three steps to start.</span></p>
+    </div>
+    <div class="install">
+      <div class="card reveal">
+        <div class="n">1</div>
+        <h3><span class="zh">安裝 TestFlight</span><span class="en">Install TestFlight</span></h3>
+        <p><span class="zh">在 iPhone 的 App Store 下載 Apple 的 </span><span class="en">Get Apple's </span><a href="https://apps.apple.com/app/testflight/id899247664" target="_blank" rel="noopener">TestFlight</a><span class="zh"> App。</span><span class="en"> app from the App Store on your iPhone.</span></p>
+      </div>
+      <div class="card reveal">
+        <div class="n">2</div>
+        <h3><span class="zh">打開邀請連結</span><span class="en">Open the invite link</span></h3>
+        <p><span class="zh">在 iPhone 上點</span><span class="en">On your iPhone, tap the </span><a class="tf-link" href="#join"><span class="zh">念流內測連結</span><span class="en">NianFlow beta link</span></a><span class="zh">，接受邀請後安裝。需要 iOS 26。</span><span class="en">, accept and install. Requires iOS 26.</span></p>
+      </div>
+      <div class="card reveal">
+        <div class="n">3</div>
+        <h3><span class="zh">設定 AI（選用）</span><span class="en">Set up AI (optional)</span></h3>
+        <p><span class="zh">到「設定 › AI 服務」貼上 OpenAI 或 DeepSeek 的 API Key。錄音、轉文字、播報不需要 Key。</span><span class="en">Paste an OpenAI or DeepSeek API key in Settings › AI. Recording, transcription and playback work without one.</span></p>
+      </div>
+    </div>
+    <div class="final reveal">
+      <a class="btn btn-primary tf-link" href="#join"><svg><use href="#i-apple"/></svg><span class="zh">加入 TestFlight 內測</span><span class="en">Join the TestFlight beta</span></a>
+      <p class="note"><span class="zh">Android 版準備上架 Google Play。有問題請看</span><span class="en">An Android version is on its way to Google Play. Questions? See </span><a href="support/" style="color:var(--teal)"><span class="zh">支援頁</span><span class="en">Support</span></a><span class="zh">。</span><span class="en">.</span></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><img src="assets/icon.svg" alt=""><span>念流 NianFlow</span></div>
+    <div class="links">
+      <a href="support/"><span class="zh">支援</span><span class="en">Support</span></a>
+      <a href="privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy policy</span></a>
+      <a href="mailto:wdhsieh99@gmail.com">wdhsieh99@gmail.com</a>
+    </div>
+    <div>© 2026 Weidong Hsieh</div>
+  </div>
+</footer>
+
+<script>
+// TestFlight 公開連結：填好後所有「加入內測」按鈕都會指向這裡
+const TESTFLIGHT_URL = "";
+
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById("lang");
+  function apply(lang) {
+    root.dataset.lang = lang;
+    root.lang = lang === "zh" ? "zh-Hant" : "en";
+    btn.textContent = lang === "zh" ? "EN" : "中文";
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+  }
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch (e) {}
+  const q = new URLSearchParams(location.search).get("lang");
+  apply(q === "en" || q === "zh" ? q : saved || (/^zh/i.test(navigator.language) ? "zh" : "en"));
+  btn.addEventListener("click", () => apply(root.dataset.lang === "zh" ? "en" : "zh"));
+
+  if (TESTFLIGHT_URL) {
+    document.querySelectorAll(".tf-link").forEach(a => { a.href = TESTFLIGHT_URL; a.target = "_blank"; a.rel = "noopener"; });
+  }
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
